@@ -21,7 +21,9 @@ _incr:
        
        mov esp, ebp
        pop ebp
-       ret
+       ret            ; RET now pops the current value (addres) from the Stack 
+                      ; and puts it into EIP. The CPU then continues execution 
+                      ; at this address.
 ; our program starts here
 _start:
         push ebp      ; save current EBP and create a new stack frame
@@ -33,19 +35,20 @@ _start:
         call _incr    ; Go to `_incr` label and continue execution there
                       ; Notice: 
                       ; Every `call` comprises of two _implicit_ tasks: 
-                      ; First, save the NEXT ADDRESS after `call` to EIP 
-                      ; Sencond: JUMP to the given label. 
-                      ; The address that's being saved into EIP-register will
+                      ; First: push the NEXT ADDRESS after `call` to the Stack 
+                      ; Second: JUMP to the given label (the address). 
+                      ; The address that's being pushed to the Stack will
                       ; later be used to find the point in memory where
                       ; the program should continue its execution after the
-                      ; called procedure has completed. In our case
-                      ; the address will belong to the `add esp, 4` mnemonic
-                      ; below the `call _incr`. Every `call` is actuall a 
-                      ; MOV EIP, some-address and JUMP some-label but because
+                      ; called procedure returns. In our case the address
+                      ; will point to `add esp, 4` mnemonic on line 52
+                      ; right below the `call _incr`. Every `call` is actually  
+                      ; `PUSH some-address` + `JUMP some-label` but because
                       ; there's no possibility to manipulate EIP directly 
                       ; the values in EIP can only be changed by special 
-                      ; menonics like `call`.
-                      
+                      ; menonics like `call` that indirectly manipulate it
+                      ; by storing the addresses on the Stack.
+
         add  esp, 4   ; We came back from `_incr` and will reclaim the previously 
                       ; used 4-bytes by _incr's argument
         
