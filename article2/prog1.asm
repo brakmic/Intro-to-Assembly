@@ -24,8 +24,8 @@ _incr:
        retn
 ; our program starts here
 _start:
-        push ebp      ; save old stack pointer and create new stack frame
-        mov  ebp, esp
+        push ebp      ; save current EBP and create a new stack frame
+        mov  ebp, esp ; by replacing EBP with the current stack pointer
                     
         mov  eax, 10  ; prepare argument for function `_incr`
         push eax      ; and put them on the stack so `_incr` can grab them
@@ -61,8 +61,9 @@ _start:
         push 0        ; Be nice and let the system know that everything  
                       ; completed without any errors (like `return 0` in C/C++).
         
-        mov  esp, ebp ; Now restore the previous stack pointer 
-        pop  ebp
+        mov  esp, ebp ; Now restore everything by replacing the 
+        pop  ebp      ; the ESP with the current EBP and 
+                      ; getting the previously saved base pointer
 
         call [ExitProcess] ; Go back to the calling procedure (system, whatever)
 
