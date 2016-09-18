@@ -21,7 +21,7 @@ _incr:
        
        mov esp, ebp
        pop ebp
-       retn
+       ret
 ; our program starts here
 _start:
         push ebp      ; save current EBP and create a new stack frame
